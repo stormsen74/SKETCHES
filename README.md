@@ -15,13 +15,13 @@ _A growing collection of Samples using r3f & p5_
 ### Installation
 
 ```
-npm install
+yarn
 ```
 
 ### Scripts
 
 ```
-npm run dev
-npm run build
-npm run preview
+yarn dev
+yarn build
+yarn preview
 ```
