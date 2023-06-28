@@ -2,7 +2,7 @@
 
 _A growing collection of Samples using r3f & p5_
 
-![Preview](/public/texture.jpg)
+<img alt="Preview" height="824" src="/public/texture.jpg" width="768"/>
 
 ### Resources:
 
