@@ -14,6 +14,8 @@ import { Button, Buttons, WrapperUI } from './styles.js'
 // https://www.youtube.com/watch?v=lN1lfXtrbzU
 // https://en.wikipedia.org/wiki/Hexagram_(I_Ching)
 
+// Todo fixTableCollider / Perf CoinCollider
+
 export default function IChing() {
   const coin_1 = useRef()
   const coin_2 = useRef()
@@ -91,10 +93,6 @@ export default function IChing() {
         </Physics>
 
         <Table />
-
-        {/*<EffectComposer disableNormalPass multisampling={0}>*/}
-        {/*  <N8AO halfRes color='black' aoRadius={8} intensity={4} aoSamples={6} denoiseSamples={4} />*/}
-        {/*</EffectComposer>*/}
       </Canvas>
       <WrapperUI>
         <ResultView show={showResult} hexagramLines={hexagramLines} handleRestart={handleRestart} />

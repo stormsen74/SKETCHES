@@ -9,6 +9,8 @@ import DreiSampler from './sketches/r3f/Sampler'
 import IChing from './sketches/r3f/IChing'
 import DustParticles from './sketches/r3f/DustParticles'
 import FakeGodRays from './sketches/r3f/FakeGodRays'
+import SunWalk from './sketches/r3f/SunWalk/index.js'
+import VertexParticles from './sketches/r3f/VertexParticles'
 
 const Bla = styled.div`
   position: absolute;
@@ -25,7 +27,7 @@ const App = () => {
 
   useEffect(() => {
     setTimeout(() => {
-      applySketch(<IChing />)
+      applySketch(<VertexParticles />)
     }, 0)
 
     return () => {
