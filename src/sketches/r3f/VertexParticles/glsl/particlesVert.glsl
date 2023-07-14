@@ -1,5 +1,6 @@
 uniform float uTime;
 uniform float uRadius;
+uniform float distanceExp;
 
 varying float vDistance;
 
@@ -16,7 +17,7 @@ mat3 rotation3dY(float angle) {
 
 
 void main() {
-    float distanceFactor = pow(uRadius - distance(position, vec3(0.0)), 1.5);
+    float distanceFactor = pow(uRadius - distance(position, vec3(0.0)), distanceExp);
     float size = distanceFactor * 15.0 + 100.0;
     vec3 particlePosition = position * rotation3dY(uTime * 0.25 * distanceFactor);
 
@@ -30,5 +31,5 @@ void main() {
 
     gl_PointSize = size;
     // Size attenuation;
-    gl_PointSize *= (1.0 / - viewPosition.z) * 2.0;
+    gl_PointSize *= (1.0 / - viewPosition.z) * 1.0;
 }
