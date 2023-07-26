@@ -1,12 +1,10 @@
 import Sketch from 'react-p5'
 import Particle from './Particle.js'
 
-
-
 export default function ReactP5_Setup() {
   const particles = []
 
-  const addParticle = (p5,position) => {
+  const addParticle = (p5, position) => {
     const particle = new Particle(p5, position)
     particles.push(particle)
   }
@@ -34,7 +32,6 @@ export default function ReactP5_Setup() {
         particles.splice(i, 1)
       }
     }
-
   }
 
   const windowResized = p5 => {
@@ -46,7 +43,5 @@ export default function ReactP5_Setup() {
     addParticle(p5, position)
   }
 
-  return (
-    <Sketch setup={setup} draw={draw} windowResized={windowResized} mouseClicked={handleClick} />
-  )
+  return <Sketch setup={setup} draw={draw} windowResized={windowResized} mouseClicked={handleClick} />
 }

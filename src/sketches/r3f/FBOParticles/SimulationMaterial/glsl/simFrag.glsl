@@ -1,8 +1,9 @@
 uniform sampler2D positions;
 uniform float uTime;
-uniform float uFrequency;
 varying vec2 vUv;
 
+uniform float uFactor;
+uniform float uEvolution;
 
 //
 // Description : Array and textureless GLSL 2D/3D/4D simplex
@@ -143,14 +144,54 @@ vec3 curlNoise(vec3 p){
 }
 
 
+//void main() {
+//    //    vec3 pos = texture2D(positions, vUv).rgb;
+//    vec3 curlPos = texture2D(positions, vUv).rgb;
+//
+//    //    pos = curlNoise(pos * uFrequency + uTime * 0.1);
+//    curlPos = curlNoise(curlPos * uFrequency + uTime * 0.01);
+//    curlPos += curlNoise(curlPos * uFrequency * 2.0) * 3.0;
+//
+//    //    gl_FragColor = vec4(mix(pos, curlPos, sin(uTime)), 1.0);
+//    gl_FragColor = vec4(curlPos, 1.0);
+//}
+
+
+//https://github.com/nicoptere/FBO/blob/master/glsl/noise/simulation_fs.glsl
+
+//void main() {
+//    float frequency = 1.0;
+//    float amplitude = 1.0;
+//    float maxDistance = 1.0;
+//
+//    vec3 pos = texture2D(positions, vUv).xyz;
+//
+//    vec3 tar = pos + curlNoise(pos * uFrequency + uTime * 0.1) * amplitude;
+//
+//    float d = length(pos-tar) / maxDistance;
+//    pos = mix(pos, tar, pow(d, 5.));
+//
+//    gl_FragColor = vec4(pos, 1.);
+//
+//}
+
+
+//https://github.com/spite/polygon-shredder/blob/master/index.html
+
 void main() {
-//    vec3 pos = texture2D(positions, vUv).rgb;
-    vec3 curlPos = texture2D(positions, vUv).rgb;
+    float speedInc = 1.0;
+    float delta = 1.0;
+    float speed = 1.0;
 
-//    pos = curlNoise(pos * uFrequency + uTime * 0.1);
-    curlPos = curlNoise(curlPos * uFrequency + uTime * 0.01);
-    curlPos += curlNoise(curlPos * uFrequency * 2.0) * 3.0;
 
-    //    gl_FragColor = vec4(mix(pos, curlPos, sin(uTime)), 1.0);
-    gl_FragColor = vec4(curlPos, 1.0);
+    vec4 c = texture2D(positions, vUv);
+    vec3 pos = c.xyz;
+    //    float life = c.a;
+
+    vec3 v = uFactor * speedInc * delta * speed * (curlNoise(.2 * pos + uFactor * uEvolution * .1 * uTime));
+    pos += v;
+    //    life -= factor * 1.;
+
+    gl_FragColor = vec4(pos, 1.0);
+
 }

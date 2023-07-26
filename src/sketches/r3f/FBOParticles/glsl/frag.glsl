@@ -1,5 +1,8 @@
+uniform vec3 uColor;
+
 void main() {
-    vec3 color = vec3(255.0/255.0, 155.0/255.0, 25.0/255.0);
+//    vec3 color = vec3(255.0/255.0, 155.0/255.0, 25.0/255.0);
+    vec3 color = uColor;
 
     float strength = distance(gl_PointCoord, vec2(0.5));
     strength = 1.0 - strength;

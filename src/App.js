@@ -11,6 +11,8 @@ import DustParticles from './sketches/r3f/DustParticles'
 import FakeGodRays from './sketches/r3f/FakeGodRays'
 import SunWalk from './sketches/r3f/SunWalk/index.js'
 import VertexParticles from './sketches/r3f/VertexParticles'
+import FBOParticles from './sketches/r3f/FBOParticles'
+import Icosahedron from './sketches/r3f/Icosahedron'
 
 const Bla = styled.div`
   position: absolute;
@@ -22,12 +24,17 @@ const Bla = styled.div`
   background-size: contain;
 `
 
+// Potential Sketches
+
+// ~ isolines
+// https://github.com/winkerVSbecks/sketchbook/blob/master/basic-noise.js
+
 const App = () => {
   const [sketch, applySketch] = useState(null)
 
   useEffect(() => {
     setTimeout(() => {
-      applySketch(<VertexParticles />)
+      applySketch(<Icosahedron />)
     }, 0)
 
     return () => {

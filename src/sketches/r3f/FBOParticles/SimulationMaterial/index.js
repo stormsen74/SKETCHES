@@ -32,8 +32,10 @@ class SimulationMaterial extends ShaderMaterial {
 
     const simulationUniforms = {
       positions: { value: positionsTexture },
-      uFrequency: { value: 0.25 },
+      // uFrequency: { value: 0.25 },
       uTime: { value: 0 },
+      uFactor: { value: 0.75 },
+      uEvolution: { value: 1 },
     }
 
     super({

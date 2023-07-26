@@ -1,5 +1,7 @@
 uniform sampler2D uPositions;
 uniform float uTime;
+uniform vec3 uColor;
+
 
 void main() {
     vec3 pos = texture2D(uPositions, position.xy).xyz;
@@ -10,7 +12,7 @@ void main() {
 
     gl_Position = projectedPosition;
 
-    gl_PointSize = 7.0;
+    gl_PointSize = 5.0;
     // Size attenuation;
     gl_PointSize *= step(1.0 - (1.0/64.0), position.x) + 0.5;
 }

@@ -1,14 +1,14 @@
-import { Canvas, extend, useFrame, createPortal } from '@react-three/fiber'
+import { Canvas, createPortal, extend, useFrame } from '@react-three/fiber'
 import { Perf } from 'r3f-perf'
 import { CameraControls, useFBO } from '@react-three/drei'
 import { useMemo, useRef } from 'react'
-import { AdditiveBlending, FloatType, NearestFilter, OrthographicCamera, RGBAFormat, Scene } from 'three'
-
+import { AdditiveBlending, Color, FloatType, NearestFilter, OrthographicCamera, RGBAFormat, Scene } from 'three'
 import SimulationMaterial from './SimulationMaterial/index.js'
-extend({ SimulationMaterial: SimulationMaterial })
-
 import vertexShader from './glsl/vert.glsl'
 import fragmentShader from './glsl/frag.glsl'
+import { useControls } from 'leva'
+
+extend({ SimulationMaterial: SimulationMaterial })
 
 // https://blog.maximeheckel.com/posts/the-magical-world-of-particles-with-react-three-fiber-and-shaders/
 
@@ -47,9 +47,18 @@ const Particles = () => {
       uPositions: {
         value: null,
       },
+      uColor: { value: new Color('#ffffff') },
     }),
     []
   )
+
+  const { showGrid, showRenderTex, factor, evolution, pColor } = useControls({
+    showGrid: false,
+    showRenderTex: false,
+    factor: { value: 0.75, min: 0, max: 2, step: 0.01 },
+    evolution: { value: 1.0, min: 0, max: 2, step: 0.01 },
+    pColor: '#ffbb00',
+  })
 
   useFrame(state => {
     const { gl, clock, delta } = state
@@ -60,8 +69,11 @@ const Particles = () => {
     gl.setRenderTarget(null)
 
     points.current.material.uniforms.uPositions.value = renderTarget.texture
+    points.current.material.uniforms.uColor.value = new Color(pColor)
 
     simulationMaterialRef.current.uniforms.uTime.value = clock.elapsedTime
+    simulationMaterialRef.current.uniforms.uFactor.value = factor
+    simulationMaterialRef.current.uniforms.uEvolution.value = evolution
   })
 
   return (
@@ -93,13 +105,23 @@ const Particles = () => {
           uniforms={uniforms}
         />
       </points>
-      <mesh>
-        <planeBufferGeometry />
-        <meshBasicMaterial map={renderTarget.texture} />
-      </mesh>
+
+      {showRenderTex && (
+        <sprite scale={[3, 3]} center={[0, 1]} renderOrder={-10}>
+          <spriteMaterial
+            map={renderTarget.texture}
+            sizeAttenuation={true}
+            depthTest={true}
+            depthWrite={false}
+            transparent={true}
+          />
+        </sprite>
+      )}
+      {showGrid && <gridHelper args={[10, 10, '#000000']} />}
     </>
   )
 }
+
 export default function FBOParticles() {
   return (
     <Canvas camera={{ fov: 35, position: [-10, 15, 20] }}>
@@ -107,7 +129,6 @@ export default function FBOParticles() {
       <Perf position='top-left' />
       <CameraControls />
       <Particles />
-      <gridHelper args={[10, 10, '#000000']} />
     </Canvas>
   )
 }
