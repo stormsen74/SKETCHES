@@ -48,7 +48,7 @@ const Cube = () => {
   const cubeRef = useRef(null)
 
   const position = useMemo(() => {
-    return [-2.5 * rnd(5), 3 + rnd(1), -2.5 * rnd(5)]
+    return [-2.5 * rnd(5), 2 + rnd(1), -2.5 * rnd(5)]
   }, [])
 
   const onClick = () => {
@@ -63,6 +63,7 @@ const Cube = () => {
         position={position}
         restitution={1}
         ref={cubeRef}
+        type={'kinematicVelocity'}
         onCollisionEnter={({ manifold }) => {
           // console.log('Collision at world position ', manifold.solverContactPoint(0))
         }}

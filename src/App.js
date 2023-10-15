@@ -13,6 +13,9 @@ import SunWalk from './sketches/r3f/SunWalk/index.js'
 import VertexParticles from './sketches/r3f/VertexParticles'
 import FBOParticles from './sketches/r3f/FBOParticles'
 import Icosahedron from './sketches/r3f/Icosahedron'
+import ImageHoverReveal from './sketches/r3f/ImageHoverReveal'
+import ImageUVCoordinates from './sketches/r3f/ImageUVCoordinates'
+import OrbitingWisps from './sketches/r3f/OrbitingWisps'
 
 const Bla = styled.div`
   position: absolute;
@@ -34,7 +37,7 @@ const App = () => {
 
   useEffect(() => {
     setTimeout(() => {
-      applySketch(<Icosahedron />)
+      applySketch(<OrbitingWisps />)
     }, 0)
 
     return () => {
