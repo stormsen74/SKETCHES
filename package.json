@@ -5,7 +5,7 @@
   "description": "",
   "keywords": [],
   "author": "",
-  "repository": "github:benjaminmiles/react-three-vite",
+  "repository": "",
   "license": "MIT",
   "dependencies": {
     "@gltf-transform/functions": "^3.4.2",

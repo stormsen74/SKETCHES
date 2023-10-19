@@ -5,7 +5,7 @@ const rnd = (min, max) => {
   return Math.floor(Math.random() * max) + min
 }
 
-const size = 0.5
+const size = 0.25
 
 export default function Box() {
   const box = useRef()
@@ -15,7 +15,8 @@ export default function Box() {
 
   useEffect(() => {
     setTimeout(() => {
-      box.current?.applyTorqueImpulse({ x: 0.1, y: 0.1, z: 0.1 }, true)
+      box.current?.applyTorqueImpulse({ x: -0.01, y: 0.02, z: -0.03 }, true)
+      box.current?.applyImpulse({ x: 0.075, y: -0.075, z: 0 }, true)
     }, 1000)
   }, [])
 
@@ -24,14 +25,15 @@ export default function Box() {
       colliders={'cuboid'}
       ref={box}
       restitution={0.5}
-      linearDamping={5}
-      angularDamping={5}
+      linearDamping={1}
+      angularDamping={1}
       density={1}
+      mass={1}
       position={position}
     >
       <mesh>
         <boxGeometry args={[size, size, size]} />
-        <meshNormalMaterial />
+        <meshStandardMaterial color={'#233155'} roughness={0.2} metallness={1} />
       </mesh>
     </RigidBody>
   )

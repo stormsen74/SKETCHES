@@ -1,5 +1,3 @@
-
-
 uniform sampler2D u_map;
 uniform sampler2D u_hovermap;
 uniform sampler2D u_shape;
@@ -122,7 +120,7 @@ float snoise(vec3 v)
 
 
 void main() {
-    vec2 resolution = u_res * 1.5;
+    vec2 resolution = u_res * PR;
     vec2 uv = v_uv;
     vec2 uv_h = v_uv;
     float time = u_time * 0.05;
@@ -132,17 +130,18 @@ void main() {
     vec2 st = gl_FragCoord.xy / resolution.xy - vec2(.5);
     st.y *= resolution.y / resolution.x;
 
-    vec2 mouse = vec2((u_mouse.x / u_res.x) * 2. - 1.,-(u_mouse.y / u_res.y) * 2. + 1.) * -.5;
+    vec2 mouse = vec2((u_mouse.x / u_res.x) * 2. - 1., -(u_mouse.y / u_res.y) * 2. + 1.) * -.5;
     mouse.y *= resolution.y / resolution.x;
 
     uv -= vec2(0.5);
-    uv *= 1. - u_progressHover * 0.03;
+    //    uv *= 1. - u_progressHover * 0.03;
     uv *= u_ratio;
     uv += vec2(0.5);
 
     vec2 shapeUv = (st + mouse) * 4.;
     shapeUv *= 1.5 - (progressHover + progress) * 0.8;
     shapeUv /= progressHover;
+    shapeUv *= 1.0;//scale shape
     shapeUv += vec2(.5);
 
     vec4 shape = texture2D(u_shape, shapeUv);
@@ -158,13 +157,15 @@ void main() {
     uv_h += vec2(0.5);
 
 
-    vec4 image = texture2D(u_map, uv + mouse * 0.05 * progressHover * (1. - progress));
-    vec4 hover = texture2D(u_hovermap, uv_h + mouse * 0.5 * progressHover * (1. - progress));
+    //    vec4 image = texture2D(u_map, uv + mouse * 0.05 * progressHover * (1. - progress));
+    //    vec4 hover = texture2D(u_hovermap, uv_h + mouse * 0.5 * progressHover * (1. - progress));
+    vec4 image = texture2D(u_map, uv);
+    vec4 hover = texture2D(u_hovermap, uv);
 
     float pct = smoothstep(.99, 1., clamp(n - s, 0., 1.) + progress);
 
     vec4 finalImage = mix(image, hover, pct);
 
-    gl_FragColor = vec4(finalImage.rgb, u_alpha) ;
-//     gl_FragColor = vec4(vec3(pct), 1.);
+//    gl_FragColor = vec4(finalImage.rgb, u_alpha);
+        gl_FragColor = vec4(vec3(pct), 1.);
 }

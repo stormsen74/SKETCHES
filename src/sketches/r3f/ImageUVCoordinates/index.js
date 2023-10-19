@@ -1,7 +1,7 @@
 import { Canvas, useFrame, useLoader } from '@react-three/fiber'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { TextureLoader, Vector2 } from 'three'
-import Texture from './rgb.png'
+import Texture from './assets/rgb.png'
 import styled from 'styled-components'
 
 const Display = styled.div`
@@ -67,11 +67,11 @@ function ImageTest({ setPicked }) {
   )
 }
 export default function ImageUVCoordinates() {
-  const [picked, setPicked] = useState('✌️')
+  const [picked, setPicked] = useState('✌')
 
   return (
     <>
-      <Display>{picked}</Display>
+      <Display>{picked}</Display>️
       <Canvas camera={{ fov: 35, position: [0, 0, 5] }}>
         <ImageTest setPicked={setPicked} />
       </Canvas>

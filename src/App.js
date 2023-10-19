@@ -37,7 +37,7 @@ const App = () => {
 
   useEffect(() => {
     setTimeout(() => {
-      applySketch(<OrbitingWisps />)
+      applySketch(<ImageHoverReveal />)
     }, 0)
 
     return () => {

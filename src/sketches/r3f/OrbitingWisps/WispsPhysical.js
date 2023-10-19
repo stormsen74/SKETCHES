@@ -12,12 +12,10 @@ import Box from './Box.js'
 const RADIUS = 5
 const CAST_MESH_RADIUS = 1.5
 const CAST_MESH_VISIBLE = false
-const TARGET_VISIBLE = true
+const TARGET_VISIBLE = false
 const DEBUG_LINE = false
 const DELTA_T = 0.5
-// const NOISE_SETTINGS = { delta: new Vector3(0.5, 0.5, 0.5), scale: new Vector3(0.5, 1, 0.5) }
-const deltaNoise = new Vector3(0.5, 0.5, 0.5)
-const noiseScale = new Vector3(0.5, 1, 0.5)
+const NOISE = { delta: new Vector3(0.5, 0.5, 0.5), scale: new Vector3(0.5, 1, 0.5) }
 
 function Wisp({ id, hoverId, setHoverId, color, noise }) {
   const { camera } = useThree()
@@ -26,7 +24,8 @@ function Wisp({ id, hoverId, setHoverId, color, noise }) {
   const target = useRef()
   const intersect = useRef()
   const castMesh = useRef()
-  const t = useRef(id * 2) //id * 2
+  const step = (Math.PI * 2) / 4
+  const t = useRef(id * step)
   const [locked, setLocked] = useState(false)
   const [inital, setInitial] = useState(true)
   const targetPosition = useMemo(() => {
@@ -62,9 +61,9 @@ function Wisp({ id, hoverId, setHoverId, color, noise }) {
 
     targetPosition.x = RADIUS * Math.sin(t.current)
     targetPosition.z = RADIUS * Math.cos(t.current)
-    targetPosition.x += noise(t.current * deltaNoise.x, id) * noiseScale.x
-    targetPosition.z += noise(t.current * deltaNoise.z, id) * noiseScale.z
-    targetPosition.y = noise(t.current * deltaNoise.y, id) * noiseScale.y
+    targetPosition.x += noise(t.current * NOISE.delta.x, id) * NOISE.scale.x
+    targetPosition.z += noise(t.current * NOISE.delta.z, id) * NOISE.scale.z
+    targetPosition.y = noise(t.current * NOISE.delta.y, id) * NOISE.scale.y
     target.current.position.copy(targetPosition)
 
     const translation = rigidBody.current?.translation()
@@ -75,11 +74,7 @@ function Wisp({ id, hoverId, setHoverId, color, noise }) {
     const posTarget = target.current.position.clone()
     const posIntersect = intersect.current.position.clone()
 
-    // if (locked) {
-    //   collider.current.setDensity(0.2)
-    // } else {
     //   collider.current.setDensity(0.25)
-    // }
 
     const dir = locked ? posIntersect.sub(bodyPosition) : posTarget.sub(bodyPosition)
     dir.normalize().multiplyScalar(!locked ? 0.01 : 0.05)
@@ -87,7 +82,7 @@ function Wisp({ id, hoverId, setHoverId, color, noise }) {
 
     renderDebugLine()
 
-    // initial rBody position!
+    // initial rigidBody position!
     if (inital && rigidBody.current && collider.current) {
       setInitial(false)
       rigidBody.current?.setTranslation(targetPosition)
@@ -177,11 +172,12 @@ export default function WispsPhysical() {
   return (
     <>
       <Suspense>
-        <Physics debug={false} colliders={false} gravity={[0, 0, 0]} paused={paused}>
-          <Wisp id={1} hoverId={hoverId} setHoverId={setHoverId} color={'#b57104'} noise={noise} />
-          <Wisp id={2} hoverId={hoverId} setHoverId={setHoverId} color={'#b50492'} noise={noise} />
-          <Wisp id={3} hoverId={hoverId} setHoverId={setHoverId} color={'#59abb2'} noise={noise} />
-          <Box />
+        <Physics debug={false} colliders={false} gravity={[0, 1, 0]} paused={paused}>
+          <Wisp id={0} hoverId={hoverId} setHoverId={setHoverId} color={'#b57104'} noise={noise} />
+          <Wisp id={1} hoverId={hoverId} setHoverId={setHoverId} color={'#b50492'} noise={noise} />
+          <Wisp id={2} hoverId={hoverId} setHoverId={setHoverId} color={'#59abb2'} noise={noise} />
+          <Wisp id={3} hoverId={hoverId} setHoverId={setHoverId} color={'#b29159'} noise={noise} />
+          {/*<Box />*/}
         </Physics>
       </Suspense>
     </>
