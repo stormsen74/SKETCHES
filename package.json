@@ -12,7 +12,7 @@
     "@react-three/drei": "^9.77.0",
     "@react-three/fiber": "^8.13.3",
     "@react-three/postprocessing": "^2.14.11",
-    "@react-three/rapier": "^1.0.1",
+    "@react-three/rapier": "^1.1.2",
     "@vitejs/plugin-react": "^3.0.0",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",

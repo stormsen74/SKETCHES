@@ -16,6 +16,8 @@ import Icosahedron from './sketches/r3f/Icosahedron'
 import ImageHoverReveal from './sketches/r3f/ImageHoverReveal'
 import ImageUVCoordinates from './sketches/r3f/ImageUVCoordinates'
 import OrbitingWisps from './sketches/r3f/OrbitingWisps'
+import Bending from '@src/sketches/r3f/Bending/Bending.js'
+import ShaderTest from '@src/sketches/r3f/ShaderTest/index.js'
 
 const Bla = styled.div`
   position: absolute;
@@ -37,7 +39,7 @@ const App = () => {
 
   useEffect(() => {
     setTimeout(() => {
-      applySketch(<ImageHoverReveal />)
+      applySketch(<ShaderTest />)
     }, 0)
 
     return () => {
@@ -48,7 +50,7 @@ const App = () => {
   return (
     <>
       {sketch}
-      {/*<Bla src={texture} />*/}
+      <Bla src={texture} />
     </>
   )
 }

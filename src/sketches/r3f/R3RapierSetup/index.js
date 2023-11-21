@@ -1,7 +1,7 @@
-import { Physics, RigidBody } from '@react-three/rapier'
+import { CuboidCollider, Physics, RigidBody } from '@react-three/rapier'
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei'
-import React, { useMemo, useRef } from 'react'
+import React, { useEffect, useMemo, useRef } from 'react'
 import { Perf } from 'r3f-perf'
 
 // https://github.com/abernier/_tpl-r3f/tree/main
@@ -37,7 +37,7 @@ const Ico = () => {
       >
         <mesh castShadow onClick={onClick}>
           <icosahedronGeometry args={[1, 0]} />
-          <meshNormalMaterial />
+          <meshNormalMaterial transparent={true} opacity={0} />
         </mesh>
       </RigidBody>
     </>
@@ -63,7 +63,7 @@ const Cube = () => {
         position={position}
         restitution={1}
         ref={cubeRef}
-        type={'kinematicVelocity'}
+        type={'dynamic'}
         onCollisionEnter={({ manifold }) => {
           // console.log('Collision at world position ', manifold.solverContactPoint(0))
         }}
@@ -74,6 +74,46 @@ const Cube = () => {
         </mesh>
       </RigidBody>
     </>
+  )
+}
+
+function Test() {
+  const body = useRef()
+  const collider = useRef()
+
+  const onClick = () => {
+    // body.current.applyTorqueImpulse({ x: 10, y: 0, z: 0 }, true)
+    body.current.setAngvel({ x: 20.0, y: 0.0, z: 0.0 }, true)
+    // body.current.applyImpulse({ x: 0.0, y: 3.0, z: 0.0 }, true)
+    // body.current.setRotation({ w: 1.0, x: 0.3, y: 0.0, z: 0.0 }, true)
+  }
+
+  useEffect(() => {
+    if (collider.current) {
+      collider.current.setMassProperties(
+        1,
+        { x: 0.0, y: 1, z: 0.0 },
+        { x: 0.0, y: 0.0, z: 0.0 },
+        { w: 1.0, x: 0.0, y: 0.0, z: 0.0 }
+      )
+    }
+  }, [collider])
+
+  return (
+    <RigidBody position={[0, 3, 0]} ref={body} type={'dynamic'} lockTranslations={true} angularDamping={1}>
+      <CuboidCollider
+        ref={collider}
+        args={[0.5, 0.5, 0.5]}
+        // density={0.25}
+        restitution={0.5}
+        friction={0.1}
+        // massProperties={1}
+      />
+      <mesh onClick={onClick} visible={true}>
+        <boxGeometry args={[1, 1, 1]} />
+        <meshBasicMaterial transparent={true} opacity={0.5} />
+      </mesh>
+    </RigidBody>
   )
 }
 
@@ -97,19 +137,21 @@ export default function R3RapierSetup() {
       />
       <ambientLight intensity={0.2} />
 
-      <Physics debug>
-        {icos.map((_, index) => {
-          return <Ico key={index} />
-        })}
+      <Physics gravity={[0, -9, 0]} debug>
+          {icos.map((_, index) => {
+            return <Ico key={index} />
+          })}
 
-        <Ico />
-        <Cube />
+        {/*<Ico />*/}
+        {/*<Cube />*/}
 
-        <Ico />
-        <Cube />
+        {/*<Ico />*/}
+        {/*<Cube />*/}
 
-        <Ico />
-        <Cube />
+        {/*<Ico />*/}
+        {/*<Cube />*/}
+
+        <Test />
 
         <RigidBody type='fixed' position-y={-0.1 / 2} rotation={[-Math.PI / 2, 0, 0]}>
           <mesh receiveShadow>

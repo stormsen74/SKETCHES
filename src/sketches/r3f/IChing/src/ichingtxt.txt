@@ -1,0 +1,64 @@
+111111	1	Das Schöpferische	乾	
+000000	2	Das Empfangende	坤	
+100010	3	Die Anfangsschwierigkeit	屯	
+010001	4	Die Jugendtorheit	蒙	
+111010	5	Das Warten	需	
+010111	6	Der Streit	訟	
+010000	7	Das Heer	師	
+000010	8	Das Zusammenhalten	比	
+111011	9	Des Kleinen Zähmungskraft	小畜	
+110111	10	Das Auftreten	履	
+111000	11	Der Friede	泰	
+000111	12	Die Stockung	否	
+101111	13	Gemeinschaft mit Menschen	同人	
+111101	14	Der Besitz von Großem	大有	
+001000	15	Die Bescheidenheit	謙	
+000100	16	Die Begeisterung	豫	
+100110	17	Die Nachfolge	隨	
+011001	18	Die Arbeit am Verdorbenen	蠱	
+110000	19	Die Annäherung	臨	
+000011	20	Die Betrachtung	觀	
+100101	21	Das Durchbeißen	噬嗑	
+101001	22	Die Anmut	賁	
+000001	23	Die Zersplitterung	剝	
+100000	24	Die Wendezeit	復	
+100111	25	Unschuld	無妄	
+111001	26	Des Großen Zähmungskraft	大畜	
+100001	27	Die Ernährung	頤	
+011110	28	Des Großen Übergewicht	大過	
+010010	29	Das Abgründige	坎	
+101101	30	Das Feuer	離	
+001110	31	Die Einwirkung	咸	
+011100	32	Die Dauer	恆	
+001111	33	Der Rückzug	遯	
+111100	34	Des Großen Macht	大壯	
+000101	35	Der Fortschritt	晉	
+101000	36	Die Verfinsterung des Lichts	明夷	
+101011	37	Die Sippe	家人	
+110101	38	Der Gegensatz	睽	
+001010	39	Das Hemmnis	蹇	
+010100	40	Die Befreiung	解	
+110001	41	Die Minderung	損	
+100011	42	Die Mehrung	益	
+111110	43	Der Durchbruch	夬	
+011111	44	Das Entgegenkommen	姤	
+000110	45	Die Sammlung	萃	
+011000	46	Das Empordringen	升	
+010110	47	Die Bedrängnis	困	
+011010	48	Der Brunnen	井	
+101110	49	Die Umwälzung	革	
+011101	50	Der Tiegel	鼎	
+100100	51	Das Erregende	震	
+001001	52	Das Stillehalten	艮	
+001011	53	Die Entwicklung	漸	
+110100	54	Das heiratende Mädchen	歸妹	
+101100	55	Die Fülle	豐	
+001101	56	Der Wanderer	旅	
+011011	57	Das Sanfte	巽	
+110110	58	Das Heitere	兌	
+010011	59	Die Auflösung	渙	
+110010	60	Die Beschränkung	節	
+110011	61	Innere Wahrheit	中孚	
+001100	62	Des Kleinen Übergewicht	小過	
+101010	63	Nach der Vollendung	既濟	
+010101	64	Vor der Vollendung	未濟	

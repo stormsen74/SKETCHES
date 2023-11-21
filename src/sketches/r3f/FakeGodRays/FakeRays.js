@@ -1,10 +1,11 @@
-import { useLayoutEffect, useMemo, useRef } from 'react'
+import React, { useLayoutEffect, useMemo, useRef } from 'react'
 import { AdditiveBlending, Color, DoubleSide, RepeatWrapping, TextureLoader } from 'three'
 import vertexShader from './glsl/fakeRaysVert.glsl'
 import fragmentShader from './glsl/fakeRaysFrag.glsl'
 import { useFrame, useLoader } from '@react-three/fiber'
 import { useControls } from 'leva'
 import tex from './assets/vray-osl-alligator-noise.png'
+import { DEG2RAD } from 'three/src/math/MathUtils.js'
 
 export default function FakeRays() {
   const mesh = useRef(null)
@@ -42,6 +43,9 @@ export default function FakeRays() {
     uRaysStepMax,
     uGlowStepMin,
     m_uv_x,
+    radiusTop,
+    radiusBottom,
+    zRotation,
   } = useControls({
     uTime: { value: 0, min: -50, max: 50, step: 0.01 },
     uRaysColor: { value: '#ff7300' },
@@ -49,10 +53,13 @@ export default function FakeRays() {
     uBaseAlpha: { value: 1, min: 0, max: 1, step: 0.01 },
     uGlowAlpha: { value: 1, min: 0, max: 1, step: 0.01 },
     uTopFade: { value: 0.3, min: 0, max: 1, step: 0.01 },
-    uRaysStepMin: { value: 0.4, min: 0, max: 1, step: 0.01 },
+    uRaysStepMin: { value: 0.1, min: 0, max: 1, step: 0.01 },
     uRaysStepMax: { value: 0.7, min: 0, max: 1, step: 0.01 },
     uGlowStepMin: { value: 0.4, min: 0, max: 1, step: 0.01 },
-    m_uv_x: { value: 1, min: 0, max: 5, step: 0.01 },
+    m_uv_x: { value: 3, min: 0, max: 5, step: 0.01 },
+    radiusTop: { value: 0.09, min: 0, max: 5, step: 0.01 },
+    radiusBottom: { value: 0.85, min: 0, max: 5, step: 0.01 },
+    zRotation: { value: 90 * DEG2RAD, min: 0, max: Math.PI * 2, step: 0.01 },
   })
 
   useFrame((state, delta, frame) => {
@@ -72,18 +79,21 @@ export default function FakeRays() {
   })
 
   return (
-    <mesh ref={mesh} position-z={0.1}>
-      <cylinderGeometry args={[1, 5, 10, 32, 1, true]} />
-      <shaderMaterial
-        uniforms={uniforms}
-        fragmentShader={fragmentShader}
-        vertexShader={vertexShader}
-        transparent={true}
-        blending={AdditiveBlending}
-        depthWrite={false}
-        depthTest={false}
-        side={DoubleSide}
-      />
-    </mesh>
+    <>
+      <axesHelper />
+      <mesh ref={mesh} position-z={0.1} rotation={[0, 0, zRotation]}>
+        <cylinderGeometry args={[radiusTop, radiusBottom, 10, 32, 1, true]} />
+        <shaderMaterial
+          uniforms={uniforms}
+          fragmentShader={fragmentShader}
+          vertexShader={vertexShader}
+          transparent={true}
+          blending={AdditiveBlending}
+          depthWrite={false}
+          depthTest={false}
+          side={DoubleSide}
+        />
+      </mesh>
+    </>
   )
 }

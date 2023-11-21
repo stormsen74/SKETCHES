@@ -29,8 +29,7 @@ export default function Light() {
 
   return (
     <>
-      <Environment preset='studio' background={false} blur={10} />
-      <directionalLight ref={dirLight} castShadow={true} intensity={0.6} color={'#ffedd8'} position={[50, 100, 100]} />
+      <directionalLight ref={dirLight} castShadow={true} intensity={0.6} color={'#ffffff'} position={[50, 100, 100]} />
     </>
   )
 }

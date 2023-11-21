@@ -10,6 +10,7 @@ import Camera from './Camera.js'
 import ResultView from './ResultView.js'
 import HexagramPreview from './HexagramPreview.js'
 import { Button, Buttons, WrapperUI } from './styles.js'
+import {Environment} from "@react-three/drei";
 
 // https://www.youtube.com/watch?v=lN1lfXtrbzU
 // https://en.wikipedia.org/wiki/Hexagram_(I_Ching)
@@ -77,6 +78,7 @@ export default function IChing() {
     <>
       <Canvas shadows camera={{ fov: 35, position: [-10, 25, 40] }}>
         <Camera />
+        <Environment preset='studio' background={true} blur={0.7} />
         <Light />
 
         <Physics debug={false}>

@@ -1,12 +1,12 @@
 import { Canvas } from '@react-three/fiber'
-import { CameraControls, Line, Wireframe } from '@react-three/drei'
+import { CameraControls, Environment, Line, MeshTransmissionMaterial, Wireframe } from '@react-three/drei'
 import { MathUtils, Vector3 } from 'three'
 import { types } from './PlatonicTypes.js'
 import { PolyhedronGeometry } from './PolyhedronGeometry.js'
 import { useControls } from 'leva'
 import { Face, VertexNode } from 'three/addons/math/ConvexHull.js'
-import { useEffect, useMemo, useRef } from 'react'
-import React from 'react'
+import React, { useEffect, useMemo } from 'react'
+import Light from '@src/sketches/r3f/IChing/Light.js'
 
 // https://github.com/pmndrs/react-three-fiber/issues/279
 // https://codesandbox.io/s/reactmeshtest-30g6t?file=/src/work.js
@@ -14,7 +14,7 @@ import React from 'react'
 function FaceNormals({ faces }) {
   return faces.map((face, i) => {
     const vS = face.midpoint
-    const vE = face.midpoint.clone().add(face.normal.clone().multiplyScalar(0.3))
+    const vE = face.midpoint.clone().add(face.normal.clone().multiplyScalar(0.1))
     return (
       <Line
         key={i}
@@ -74,7 +74,7 @@ function Hubs({ vertices }) {
   })
 }
 
-function Ico({ radius, detail, project }) {
+function Ico({ radius, detail, project, wireframe }) {
   const polyhedronGeometry = new PolyhedronGeometry(
     types.icosahedron.vertices,
     types.icosahedron.indices,
@@ -112,15 +112,27 @@ function Ico({ radius, detail, project }) {
   }, [vertices])
 
   useEffect(() => {
-    console.log('!', vertices.length, faces.length)
+    console.log('v:', vertices.length, ' f:', faces.length)
   }, [faces])
 
   return (
     <>
       <mesh geometry={polyhedronGeometry}>
-        <meshBasicMaterial color={'#1c3a97'} transparent={true} opacity={0.5} />
+        <meshStandardMaterial color={'#2e7989'} transparent={true} opacity={0.7} />
       </mesh>
-      <Wireframe geometry={polyhedronGeometry} stroke={'#000000'} thickness={0.05} squeeze={false} />
+      {wireframe && (
+        <Wireframe
+          geometry={polyhedronGeometry}
+          stroke={'#000000'}
+          thickness={0.03}
+          squeeze={true}
+          squeezeMin={0.3}
+          squeezeMax={1}
+          fillOpacity={0}
+          colorBackfaces={true}
+          // backfaceStroke={'#0000ff'}
+        />
+      )}
       <FaceNormals faces={faces} />
       <Hubs vertices={vertices} />
     </>
@@ -128,9 +140,10 @@ function Ico({ radius, detail, project }) {
 }
 
 export default function Icosahedron() {
-  const { radius, detail, project, grid } = useControls({
+  const { radius, detail, project, grid, wireframe } = useControls({
     radius: { value: 1, min: 1, max: 5, step: 0.01 },
     detail: { value: 0, min: 0, max: 3, step: 1 },
+    wireframe: true,
     project: false,
     grid: false,
   })
@@ -138,7 +151,9 @@ export default function Icosahedron() {
   return (
     <Canvas camera={{ fov: 35, position: [-5, 5, 5] }}>
       <color attach='background' args={['#001a2e']} />
-      <Ico radius={radius} detail={detail} project={project} />
+      <Environment files='./grey.exr' background={true} blur={0.35} />
+      <Light />
+      <Ico radius={radius} detail={detail} project={project} wireframe={wireframe} />
       {grid && <gridHelper args={[2, 2, '#000000']} />}
       <CameraControls />
     </Canvas>
