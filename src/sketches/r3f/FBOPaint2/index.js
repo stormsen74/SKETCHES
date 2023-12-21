@@ -1,9 +1,8 @@
-import { Canvas, createPortal, useFrame, useLoader, useThree } from '@react-three/fiber'
-import { CameraControls, OrthographicCamera, PerspectiveCamera, useFBO, useHelper } from '@react-three/drei'
+import { Canvas, createPortal, useFrame, useLoader } from '@react-three/fiber'
+import { CameraControls, OrthographicCamera, useFBO, useHelper } from '@react-three/drei'
 import {
   AdditiveBlending,
   CameraHelper,
-  Color,
   FloatType,
   Mesh,
   MeshBasicMaterial,
@@ -11,28 +10,53 @@ import {
   PlaneGeometry,
   RGBAFormat,
   Scene,
+  ShaderMaterial,
   TextureLoader,
   Vector2,
 } from 'three'
-import React, { useEffect, useMemo, useRef } from 'react'
+import React, { forwardRef, useEffect, useMemo, useRef } from 'react'
 import brushTex from './burash01.png'
 import uvTex from './base.jpg'
 import vertexShader from './glsl/vert.glsl'
 import fragmentShader from './glsl/frag.glsl'
+import { useControls } from 'leva'
 
 // https://www.youtube.com/watch?v=vWAci72MtME
 // https://gracious-keller-98ef35.netlify.app/docs/recipes/heads-up-display-rendering-multiple-scenes/
 
-const steps = 75
+const RenderCamera = forwardRef(({ size }, ref) => {
+  const frustumSize = size.h
+  const aspect = size.w / size.h
+  return (
+    <OrthographicCamera
+      manual
+      ref={ref}
+      top={frustumSize / 2}
+      bottom={frustumSize / -2}
+      left={(frustumSize * aspect) / -2}
+      right={(frustumSize * aspect) / 2}
+      near={5}
+      far={-5}
+      position={[0, 5, 0]}
+      rotation={[-Math.PI / 2, 0, 0]}
+    />
+  )
+})
+
+const size = { w: 15, h: 15 }
+const ppm = 64
+const targetResolution = { w: size.w * ppm, h: size.h * ppm }
+
+const steps = 100
+
 function Paint() {
-  const mesh = useRef()
-  const group = useRef()
-  const otherCamera = useRef()
+  const containerWaves = useRef()
+  const renderCamera = useRef()
   const otherScene = new Scene()
-  const mouse = useMemo(() => {
-    return new Vector2(-0.5, 0)
+  const uv_pos = useMemo(() => {
+    return new Vector2()
   }, [])
-  const prevMouse = useMemo(() => {
+  const prev_uv_pos = useMemo(() => {
     return new Vector2()
   }, [])
   const currentWave = useRef(0)
@@ -41,7 +65,7 @@ function Paint() {
     return []
   }, [])
 
-  const renderTarget = useFBO(window.innerWidth, window.innerHeight, {
+  const renderTarget = useFBO(targetResolution.w, targetResolution.h, {
     minFilter: NearestFilter,
     magFilter: NearestFilter,
     format: RGBAFormat,
@@ -49,7 +73,11 @@ function Paint() {
     type: FloatType,
   })
 
-  useHelper(otherCamera, CameraHelper, 1, 'hotpink')
+  const { camHelper } = useControls({
+    camHelper: true,
+  })
+
+  useHelper(camHelper ? renderCamera : null, CameraHelper, 1)
 
   const uniforms = useMemo(
     () => ({
@@ -72,13 +100,14 @@ function Paint() {
       const mesh = new Mesh(geometry, material)
       mesh.visible = false
       mesh.rotation.z = Math.random()
-      group.current.add(mesh)
+      containerWaves.current.add(mesh)
       meshes.push(mesh)
     }
   }, [])
 
   const setNewWave = (x, y, index) => {
     const mesh = meshes[index]
+    if (!mesh) return
     mesh.visible = true
     mesh.position.x = x
     mesh.position.y = y
@@ -99,11 +128,11 @@ function Paint() {
       }
     })
 
-    if (Math.abs(mouse.x - prevMouse.x) < 0.001 && Math.abs(mouse.y - prevMouse.y) < 0.001) return
+    if (Math.abs(uv_pos.x - prev_uv_pos.x) < 0.001 && Math.abs(uv_pos.y - prev_uv_pos.y) < 0.001) return
     currentWave.current = (currentWave.current + 1) % steps
-    prevMouse.x = mouse.x
-    prevMouse.y = mouse.y
-    setNewWave(mouse.x, mouse.y, currentWave.current)
+    prev_uv_pos.x = uv_pos.x
+    prev_uv_pos.y = uv_pos.y
+    setNewWave(uv_pos.x, uv_pos.y, currentWave.current)
   }
 
   useFrame(state => {
@@ -113,63 +142,55 @@ function Paint() {
   useFrame(state => {
     const { gl } = state
     gl.setRenderTarget(renderTarget)
-    gl.render(otherScene, otherCamera.current)
+    gl.render(otherScene, renderCamera.current)
     uniforms.uDisplacement.value = renderTarget.texture
     gl.setRenderTarget(null)
+    // gl.clear()
 
-    // gl.render(otherScene, otherCamera.current)
+    // gl.render(otherScene, oth erCamera.current)
   }, 0)
 
   const handlePointerMove = e => {
-    mouse.x = (e.uv.x - 0.5) * 10
-    mouse.y = (e.uv.y - 0.5) * 10
+    uv_pos.x = (e.uv.x - 0.5) * size.w
+    uv_pos.y = (e.uv.y - 0.5) * size.h
   }
 
-  const frustumSize = 10
-  const aspect = 10 / 10
+  const plane = useMemo(() => {
+    const geometry = new PlaneGeometry(size.w, size.h, 1, 1)
+    const material = new ShaderMaterial({
+      uniforms: uniforms,
+      vertexShader: vertexShader,
+      fragmentShader: fragmentShader,
+      transparent: true,
+    })
+    return new Mesh(geometry, material)
+  }, [])
 
   return (
     <>
-      <mesh ref={mesh} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeBufferGeometry args={[10, 10, 1, 1]} />
-        <shaderMaterial
-          uniforms={uniforms}
-          fragmentShader={fragmentShader}
-          vertexShader={vertexShader}
-          transparent={true}
-        />
-      </mesh>
-      <OrthographicCamera
-        manual
-        ref={otherCamera}
-        top={frustumSize / 2}
-        bottom={frustumSize / -2}
-        left={(frustumSize * aspect) / -2}
-        right={(frustumSize * aspect) / 2}
-        near={5}
-        far={-5}
-        position={[0, 5, 0]}
-        rotation={[-Math.PI / 2, 0, 0]}
-      />
+      <primitive object={plane} rotation={[-Math.PI / 2, 0, 0]} />
+      <RenderCamera size={size} ref={renderCamera} />
       {createPortal(
-        <>
-          <group rotation={[-Math.PI / 2, 0, 0]}>
-            <group ref={group} />
-            <mesh onPointerMove={handlePointerMove} visible={false}>
-              <planeBufferGeometry args={[10, 10, 1, 1]} />
-            </mesh>
-          </group>
-        </>,
+        <group rotation={[-Math.PI / 2, 0, 0]}>
+          <group ref={containerWaves} />
+          <mesh onPointerMove={handlePointerMove} visible={false}>
+            <planeBufferGeometry args={[size.w, size.h, 1, 1]} />
+          </mesh>
+        </group>,
         otherScene
       )}
     </>
   )
 }
 export default function FBOPaint2() {
+  const { showAxes } = useControls({
+    showAxes: false,
+  })
+
   return (
     <Canvas camera={{ fov: 35, position: [0, 0, 20] }}>
       <CameraControls polarAngle={1.2} />
-      <axesHelper args={[3]} />
+      {showAxes && <axesHelper args={[3]} />}
       <Paint />
     </Canvas>
   )
