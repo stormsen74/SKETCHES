@@ -18,6 +18,9 @@ import ImageUVCoordinates from './sketches/r3f/ImageUVCoordinates'
 import OrbitingWisps from './sketches/r3f/OrbitingWisps'
 import Bending from '@src/sketches/r3f/Bending/Bending.js'
 import ShaderTest from '@src/sketches/r3f/ShaderTest/index.js'
+import FBOPaint from '@src/sketches/r3f/FBOPaint/index.js'
+import FBOPaint2 from '@src/sketches/r3f/FBOPaint2/index.js'
+import PortalSetup from '@src/sketches/r3f/PortalSetup/index.js'
 
 const Bla = styled.div`
   position: absolute;
@@ -39,7 +42,7 @@ const App = () => {
 
   useEffect(() => {
     setTimeout(() => {
-      applySketch(<ShaderTest />)
+      applySketch(<FBOPaint2 />)
     }, 0)
 
     return () => {
@@ -50,7 +53,7 @@ const App = () => {
   return (
     <>
       {sketch}
-      <Bla src={texture} />
+      {/*<Bla src={texture} />*/}
     </>
   )
 }
