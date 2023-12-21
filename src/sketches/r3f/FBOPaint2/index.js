@@ -130,7 +130,7 @@ function Paint() {
 
   return (
     <>
-      <mesh ref={mesh}>
+      <mesh ref={mesh} rotation={[-Math.PI / 2, 0, 0]}>
         <planeBufferGeometry args={[10, 10, 1, 1]} />
         <shaderMaterial
           uniforms={uniforms}
@@ -148,15 +148,15 @@ function Paint() {
         right={(frustumSize * aspect) / 2}
         near={5}
         far={-5}
-        position={[0, 0, 5]}
+        position={[0, 5, 0]}
+        rotation={[-Math.PI / 2, 0, 0]}
       />
       {createPortal(
         <>
-          <group>
+          <group rotation={[-Math.PI / 2, 0, 0]}>
             <group ref={group} />
             <mesh onPointerMove={handlePointerMove} visible={false}>
               <planeBufferGeometry args={[10, 10, 1, 1]} />
-              <meshNormalMaterial />
             </mesh>
           </group>
         </>,
@@ -168,8 +168,8 @@ function Paint() {
 export default function FBOPaint2() {
   return (
     <Canvas camera={{ fov: 35, position: [0, 0, 20] }}>
-      <CameraControls polarAngle={2.6} />
-      <axesHelper args={[1]} />
+      <CameraControls polarAngle={1.2} />
+      <axesHelper args={[3]} />
       <Paint />
     </Canvas>
   )
