@@ -1,7 +1,6 @@
 import { AdditiveBlending, Color, FrontSide, TextureLoader, Vector3 } from 'three'
 import React, { useMemo, useRef } from 'react'
-import vertexShader from './glsl/glowVert.glsl'
-import fragmentShader from './glsl/glowFrag.glsl'
+
 import { Canvas, useFrame, useLoader, useThree } from '@react-three/fiber'
 import { useControls } from 'leva'
 import { CameraControls, Environment } from '@react-three/drei'

@@ -10,7 +10,7 @@ import Camera from './Camera.js'
 import ResultView from './ResultView.js'
 import HexagramPreview from './HexagramPreview.js'
 import { Button, Buttons, WrapperUI } from './styles.js'
-import {Environment} from "@react-three/drei";
+import { Environment } from '@react-three/drei'
 
 // https://www.youtube.com/watch?v=lN1lfXtrbzU
 // https://en.wikipedia.org/wiki/Hexagram_(I_Ching)

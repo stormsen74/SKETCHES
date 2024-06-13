@@ -65,6 +65,11 @@ function Paint() {
     return []
   }, [])
 
+  const { camHelper, showMeshes } = useControls({
+    camHelper: true,
+    showMeshes: false,
+  })
+
   const renderTarget = useFBO(targetResolution.w, targetResolution.h, {
     minFilter: NearestFilter,
     magFilter: NearestFilter,
@@ -73,16 +78,13 @@ function Paint() {
     type: FloatType,
   })
 
-  const { camHelper } = useControls({
-    camHelper: true,
-  })
-
   useHelper(camHelper ? renderCamera : null, CameraHelper, 1)
 
   const uniforms = useMemo(
     () => ({
       uTexture: { value: uv },
       uDisplacement: { value: null },
+      repeat: { value: new Vector2(30, 30) },
     }),
     []
   )
@@ -111,7 +113,7 @@ function Paint() {
     mesh.visible = true
     mesh.position.x = x
     mesh.position.y = y
-    mesh.position.z = 0.001
+    mesh.position.z = 0.01
     mesh.material.opacity = 0.5
     mesh.scale.x = mesh.scale.y = 0.2
   }
@@ -168,11 +170,17 @@ function Paint() {
 
   return (
     <>
-      <primitive object={plane} rotation={[-Math.PI / 2, 0, 0]} />
+      {!showMeshes && <primitive object={plane} rotation={[-Math.PI / 2, 0, 0]} />}
       <RenderCamera size={size} ref={renderCamera} />
-      {createPortal(
+      {showMeshes && (
         <group rotation={[-Math.PI / 2, 0, 0]}>
           <group ref={containerWaves} />
+        </group>
+      )}
+
+      {createPortal(
+        <group rotation={[-Math.PI / 2, 0, 0]}>
+          {!showMeshes && <group ref={containerWaves} />}
           <mesh onPointerMove={handlePointerMove} visible={false}>
             <planeBufferGeometry args={[size.w, size.h, 1, 1]} />
           </mesh>
@@ -183,14 +191,16 @@ function Paint() {
   )
 }
 export default function FBOPaint2() {
-  const { showAxes } = useControls({
+  const { showAxes, showGrid } = useControls({
     showAxes: false,
+    showGrid: false,
   })
 
   return (
     <Canvas camera={{ fov: 35, position: [0, 0, 20] }}>
       <CameraControls polarAngle={1.2} />
       {showAxes && <axesHelper args={[3]} />}
+      {showGrid && <gridHelper args={[size.w, size.h]} />}
       <Paint />
     </Canvas>
   )

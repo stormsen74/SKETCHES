@@ -21,6 +21,9 @@ import ShaderTest from '@src/sketches/r3f/ShaderTest/index.js'
 import FBOPaint from '@src/sketches/r3f/FBOPaint/index.js'
 import FBOPaint2 from '@src/sketches/r3f/FBOPaint2/index.js'
 import PortalSetup from '@src/sketches/r3f/PortalSetup/index.js'
+import SimpleTree from '@src/sketches/r3f/SimpleTree/index.js'
+import LorenzAttractor from '@src/sketches/r3f/LorenzAttractor/index.js'
+import ScrollCamSetup from '@src/sketches/r3f/ScrollCamSetup/index.js'
 
 const Bla = styled.div`
   position: absolute;
@@ -42,7 +45,7 @@ const App = () => {
 
   useEffect(() => {
     setTimeout(() => {
-      applySketch(<FBOPaint2 />)
+      applySketch(<ScrollCamSetup />)
     }, 0)
 
     return () => {
