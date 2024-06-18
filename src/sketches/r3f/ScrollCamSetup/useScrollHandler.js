@@ -1,10 +1,10 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useCallback } from 'react'
 import { MathUtils } from 'three'
 import { useScrollCam } from '@src/sketches/r3f/ScrollCamSetup/useScrollCam.js'
 
 const MAX_SCROLL = 3000
 
-export default function ScrollHandler() {
+const useScrollHandler = () => {
   const requestRef = useRef(null)
   const deltaY = useRef(0)
   const scrollY = useRef(0)
@@ -29,7 +29,7 @@ export default function ScrollHandler() {
     touchStartY.current = t.pageY
   }
 
-  const update = () => {
+  const update = useCallback(() => {
     scrollY.current += deltaY.current
     scrollY.current = MathUtils.clamp(scrollY.current, -MAX_SCROLL, 0)
     smoothY.current = MathUtils.lerp(smoothY.current, -scrollY.current, 0.04)
@@ -40,19 +40,36 @@ export default function ScrollHandler() {
 
     deltaY.current = 0
     requestRef.current = requestAnimationFrame(update)
-  }
+  }, [setProgress, setScrollSpeed])
+
+  const start = useCallback(() => {
+    if (!requestRef.current) {
+      requestRef.current = requestAnimationFrame(update)
+    }
+  }, [update])
+
+  const pause = useCallback(() => {
+    if (requestRef.current) {
+      cancelAnimationFrame(requestRef.current)
+      requestRef.current = null
+    }
+  }, [])
 
   useEffect(() => {
     window.addEventListener('wheel', onWheel, { passive: false })
     window.addEventListener('touchstart', onTouchStart)
     window.addEventListener('touchmove', onTouchMove)
-    requestRef.current = requestAnimationFrame(update)
+    start()
 
     return () => {
       window.removeEventListener('wheel', onWheel)
       window.removeEventListener('touchstart', onTouchStart)
       window.removeEventListener('touchmove', onTouchMove)
-      cancelAnimationFrame(requestRef.current)
+      pause()
     }
-  }, [])
+  }, [start, pause])
+
+  return { start, pause }
 }
+
+export default useScrollHandler
