@@ -25,6 +25,7 @@ import SimpleTree from '@src/sketches/r3f/SimpleTree/index.js'
 import LorenzAttractor from '@src/sketches/r3f/LorenzAttractor/index.js'
 import ScrollCamSetup from '@src/sketches/r3f/ScrollCamSetup/index.js'
 import ScrollCamSetupLerp_0_1 from '@src/sketches/r3f/ScrollCamSetupLerp_0_1/index.js'
+import SecondUVSet from '@src/sketches/r3f/SecondUVSet/index.js'
 
 const Bla = styled.div`
   position: absolute;
@@ -46,7 +47,7 @@ const App = () => {
 
   useEffect(() => {
     setTimeout(() => {
-      applySketch(<ScrollCamSetupLerp_0_1 />)
+      applySketch(<SecondUVSet />)
     }, 0)
 
     return () => {

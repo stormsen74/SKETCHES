@@ -14,9 +14,9 @@ export default function FakeGodRays() {
     <Canvas camera={{ fov: 35, position: [-10, 25, 40] }}>
       <CameraControls />
 
-      <MeshBasedFresnel />
+      {/*<MeshBasedFresnel />*/}
       {/*<MeshBasedGlow />*/}
-      {/*<FakeRays />*/}
+      <FakeRays />
       {/*<BillboardBlades />*/}
 
       {/*<gridHelper />*/}

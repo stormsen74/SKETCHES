@@ -128,7 +128,7 @@ function Paint() {
     <>
       <scene ref={scene1}>
         <mesh ref={mesh}>
-          <planeBufferGeometry args={[window.innerWidth, window.innerHeight, 1, 1]} />
+          <planeGeometry args={[window.innerWidth, window.innerHeight, 1, 1]} />
           <shaderMaterial
             uniforms={uniforms}
             fragmentShader={fragmentShader}

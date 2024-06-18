@@ -78,7 +78,7 @@ export default function IChing() {
     <>
       <Canvas shadows camera={{ fov: 35, position: [-10, 25, 40] }}>
         <Camera />
-        <Environment preset='studio' background={true} blur={0.7} />
+        <Environment preset='studio' background={true} backgroundBlurriness={0.7} />
         <Light />
 
         <Physics debug={false}>

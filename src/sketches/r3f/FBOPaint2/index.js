@@ -182,7 +182,7 @@ function Paint() {
         <group rotation={[-Math.PI / 2, 0, 0]}>
           {!showMeshes && <group ref={containerWaves} />}
           <mesh onPointerMove={handlePointerMove} visible={false}>
-            <planeBufferGeometry args={[size.w, size.h, 1, 1]} />
+            <planeGeometry args={[size.w, size.h, 1, 1]} />
           </mesh>
         </group>,
         otherScene

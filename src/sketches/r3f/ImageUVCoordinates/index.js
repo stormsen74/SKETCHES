@@ -61,7 +61,7 @@ function ImageTest({ setPicked }) {
 
   return (
     <mesh ref={mesh} onClick={handleOnClick}>
-      <planeBufferGeometry args={[2, 2, 1, 1]} />
+      <planeGeometry args={[2, 2, 1, 1]} />
       <meshBasicMaterial map={texture} />
     </mesh>
   )

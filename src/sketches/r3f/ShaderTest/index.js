@@ -8,6 +8,9 @@ import { CameraControls, Environment } from '@react-three/drei'
 import tex from './alpha.png'
 // import uvtex from '@src/sketches/r3f/Bending/assets/texture_1k.jpg'
 
+import vertexShader from './glsl/glowVert.glsl'
+import fragmentShader from './glsl/glowFrag.glsl'
+
 // https://gist.github.com/RaheelYawar/05e4f23a5ff930227f62d88963041668
 // https://github.com/kiwipxl/GLSL-shaders/blob/e0c52cde54e5f8412b443eca4b1df597dca8d5a4/bloom.glsl
 // https://kadekeith.me/2017/09/12/three-glow.html
@@ -86,7 +89,7 @@ export default function ShaderTest() {
   return (
     <Canvas camera={{ fov: 35, position: [0, 0, 15] }}>
       <CameraControls />
-      <Environment preset='sunset' background={true} blur={0} />
+      <Environment preset='sunset' background={true} backgroundBlurriness={.2} />
       <Sphere />
     </Canvas>
   )

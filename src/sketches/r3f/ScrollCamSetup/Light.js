@@ -29,7 +29,7 @@ export default function Light() {
 
   return (
     <>
-      <Environment preset='sunset' background={true} blur={0.5} />
+      <Environment preset='sunset' background={true} backgroundBlurriness={0.5} />
       <directionalLight ref={dirLight} castShadow={true} intensity={0.6} color={'#ffffff'} position={[50, 100, 100]} />
     </>
   )

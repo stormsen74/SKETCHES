@@ -63,7 +63,7 @@ function Reveal() {
 
   return (
     <mesh ref={mesh} position-z={0.1} position-x={0}>
-      <planeBufferGeometry args={[2, 2, 1, 1]} />
+      <planeGeometry args={[2, 2, 1, 1]} />
       {/*<meshNormalMaterial />*/}
       <shaderMaterial
         uniforms={uniforms}

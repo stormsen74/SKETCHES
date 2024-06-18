@@ -138,7 +138,7 @@ export default function ObjectAlongCurve() {
       </pointLight>
 
       <mesh castShadow={true} position={[0, 1.5, 0]}>
-        <cylinderBufferGeometry args={[1, 1, 3]} />
+        <cylinderGeometry args={[1, 1, 3]} />
         <meshStandardMaterial />
       </mesh>
 

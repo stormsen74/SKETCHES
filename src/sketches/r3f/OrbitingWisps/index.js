@@ -12,7 +12,7 @@ export default function OrbitingWisps() {
   return (
     <Canvas camera={{ fov: 35, position: [15, 5, -15] }}>
       <CameraControls />
-      <Environment preset={'sunset'} background={true} blur={0.3} />
+      <Environment preset={'sunset'} background={true} backgroundBlurriness={0.3} />
       <axesHelper args={[1]} />
       <gridHelper args={[10, 10]} />
       {/*<WispsBasic />*/}
