@@ -26,6 +26,10 @@ import LorenzAttractor from '@src/sketches/r3f/LorenzAttractor/index.js'
 import ScrollCamSetup from '@src/sketches/r3f/ScrollCamSetup/index.js'
 import ScrollCamSetupLerp_0_1 from '@src/sketches/r3f/ScrollCamSetupLerp_0_1/index.js'
 import SecondUVSet from '@src/sketches/r3f/SecondUVSet/index.js'
+import ShaderSetup from '@src/sketches/r3f/ShaderSetup/ShaderSetup.js'
+import Tunnel from '@src/sketches/r3f/Tunnel/index.js'
+import ScrollGrid from '@src/sketches/r3f/ScrollGrid/index.js'
+import FlightCam from '@src/sketches/r3f/FlightCam/index.js'
 
 const Bla = styled.div`
   position: absolute;
@@ -47,7 +51,7 @@ const App = () => {
 
   useEffect(() => {
     setTimeout(() => {
-      applySketch(<SecondUVSet />)
+      applySketch(<LorenzAttractor />)
     }, 0)
 
     return () => {

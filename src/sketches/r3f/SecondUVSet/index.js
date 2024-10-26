@@ -2,7 +2,6 @@ import { Canvas } from '@react-three/fiber'
 import React, { useEffect, useRef } from 'react'
 import { CameraControls, Environment, useGLTF } from '@react-three/drei'
 import glb from './home.glb'
-import { ShaderChunk } from 'three'
 
 function Scene() {
   const sceneRef = useRef()
