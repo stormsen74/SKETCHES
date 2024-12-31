@@ -11,7 +11,7 @@
     "@gltf-transform/functions": "^3.4.2",
     "@react-three/drei": "^9.107.0",
     "@react-three/fiber": "^8.16.8",
-    "@react-three/postprocessing": "^2.14.11",
+    "@react-three/postprocessing": "^2.16.3",
     "@react-three/rapier": "^1.1.2",
     "@vitejs/plugin-react": "^3.0.0",
     "eslint-plugin-react": "^7.32.2",
@@ -27,7 +27,6 @@
     "simplex-noise": "^4.0.1",
     "styled-components": "^6.0.0-rc.3",
     "three": "^0.165.0",
-    "tweakpane": "^3.1.10",
     "use-tweaks": "^0.3.1",
     "vite": "^4.0.3",
     "vite-plugin-glsl": "^1.0.1",
@@ -50,6 +49,7 @@
     "eslint": "8.22.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-prettier": "^4.2.1",
+    "glslify": "^7.1.1",
     "prettier": "^2.8.8"
   }
 }
