@@ -26,8 +26,7 @@ import ImageHoverReveal from '@src/sketches/r3f/ImageHoverReveal/index.js'
 import ImageUVCoordinates from '@src/sketches/r3f/ImageUVCoordinates/index.js'
 import OrbitingWisps from '@src/sketches/r3f/OrbitingWisps/index.js'
 import Postprocessing from '@src/sketches/r3f/Postprocessing/index.js'
-import TornadoSketch from '@src/sketches/r3f/GPT/Tornado.js'
-import Scratch from './r3f/Scratch/index.js'
+import ReactionDiffusion from './r3f/ReactionDiffusion/index.js'
 import PerlinFlow from './r3f/PerlinFlowShader/index.js'
 import ReactionDiffusionCanvas from './p5/ReactP5_Setup/ReactionDiffusion/index.js'
 import ReactP5_Setup from './p5/ReactP5_Setup/Setup/index.js'
@@ -62,9 +61,8 @@ export const sketches = [
   { component: <ScrollGrid />, name: 'Scroll Grid', type: 'r3f' },
   { component: <FlightCam />, name: 'Flight Cam', type: 'r3f' },
   { component: <Postprocessing />, name: 'React Post', type: 'r3f' },
-  { component: <TornadoSketch />, name: 'Tornado', type: 'r3f' },
   { component: <FBOParticles />, name: 'FBO Particles', type: 'r3f' },
   { component: <PerlinFlow />, name: 'Perlin Flow', type: 'r3f' },
-  { component: <Scratch />, name: 'Scratch', type: 'r3f' },
+  { component: <ReactionDiffusion />, name: 'ReactionDiffusion', type: 'r3f' },
   // { component: <GPGPUCurlNoise />, name: 'GPGPUCurlNoise', type: 'r3f' },
 ]

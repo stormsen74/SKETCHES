@@ -4,25 +4,15 @@
 
 // https://discourse.threejs.org/t/shader-reaction-diffusion-confined-to-a-specific-shape/58515
 
-import { useRef, useCallback, useState, forwardRef, useMemo } from 'react'
-import { Canvas, useFrame, useThree, createPortal, extend, useLoader } from '@react-three/fiber'
-import { OrthographicCamera, useFBO, shaderMaterial, CameraControls } from '@react-three/drei'
+import { OrthographicCamera, useFBO } from '@react-three/drei'
+import { Canvas, createPortal, useFrame, useThree } from '@react-three/fiber'
+import { useCallback, useMemo, useRef, useState } from 'react'
+import { LinearFilter, NearestFilter, Scene } from 'three'
 import { OffScreenScene } from './OffscreenScene'
-import vertexShader from './glsl/vert.glsl'
 import outFragment from './glsl/out_frag.glsl'
-import {
-  DoubleSide,
-  FloatType,
-  LinearFilter,
-  NearestFilter,
-  RGBAFormat,
-  Scene,
-  SphereGeometry,
-  TextureLoader,
-  Vector2,
-} from 'three'
+import vertexShader from './glsl/vert.glsl'
 
-const RESOLUTION = 1024
+const RESOLUTION = 4096
 
 const Sim = () => {
   const { scene, size } = useThree()
@@ -107,7 +97,7 @@ const Sim = () => {
   )
 }
 
-export default function Scratch() {
+export default function ReactionDiffusion() {
   return (
     <Canvas>
       {/* <CameraControls /> */}

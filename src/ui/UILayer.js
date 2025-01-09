@@ -105,7 +105,11 @@ export default function UILayer({ sketches, sketch, handleSelectSketch }) {
         <Title>Select a Sketch</Title>
         <Selector>
           {sketches.map((item, index) => (
-            <SketchButton key={index} onClick={() => handleSelectSketch(item.component)}>
+            // <SketchButton key={index} onClick={() => handleSelectSketch(item.component)}>
+            <SketchButton
+              key={index}
+              onClick={() => (window.location.href = `/${item.name.replace(/\s+/g, '-').toLowerCase()}`)}
+            >
               {item.name}
               <SketchInfo>({item.type})</SketchInfo>
             </SketchButton>

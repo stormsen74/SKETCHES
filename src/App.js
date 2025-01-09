@@ -1,7 +1,18 @@
-import React, { useEffect, useState } from 'react'
-import styled from 'styled-components'
-import { sketches } from './sketches/config.js'
+// // Potential Sketches
+
+// // ~ isolines
+// // https://github.com/winkerVSbecks/sketchbook/blob/master/basic-noise.js
+
+// // Reaction diffusion
+// // https://codepen.io/forerunrun/pen/poONERw
+// // https://www.shadertoy.com/view/WlSGzy
+
+// Updated App.js with dynamic routing for R3F sketches
+import React from 'react'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import { sketches } from './sketches/config'
 import UILayer from './ui/UILayer'
+import styled from 'styled-components'
 
 const SketchWrapper = styled.div`
   position: absolute;
@@ -15,39 +26,34 @@ const SketchWrapper = styled.div`
   z-index: 0;
 `
 
-// Potential Sketches
-
-// ~ isolines
-// https://github.com/winkerVSbecks/sketchbook/blob/master/basic-noise.js
-
-// Reaction diffusion
-// https://codepen.io/forerunrun/pen/poONERw
-// https://www.shadertoy.com/view/WlSGzy
-
 const App = () => {
-  const [sketch, applySketch] = useState(null)
-
-  const handleSelectSketch = sketchComponent => {
-    applySketch(sketchComponent)
-  }
-
-  useEffect(() => {
-    // applySketch(sketches[sketches.length - 1].component)
-
-    return () => {
-      applySketch(null)
-    }
-  }, [])
-
   return (
-    <>
-      <UILayer sketches={sketches} sketch={sketch} handleSelectSketch={handleSelectSketch} />
-      <SketchWrapper>{sketch}</SketchWrapper>
-      {/*<Bla src={texture} />*/}
-    </>
+    <Router>
+      <Routes>
+        {/* Dynamically generate routes for each sketch */}
+        {sketches.map((sketch, index) => (
+          <Route
+            key={index}
+            path={`/${sketch.name.replace(/\s+/g, '-').toLowerCase()}`}
+            element={<SketchWrapper>{sketch.component}</SketchWrapper>}
+          />
+        ))}
+        {/* Default route rendering UILayer */}
+        <Route
+          path='/'
+          element={
+            <UILayer
+              sketches={sketches}
+              sketch={null}
+              handleSelectSketch={selectedSketch => {
+                window.location.href = `/${selectedSketch.name.replace(/\s+/g, '-').toLowerCase()}`
+              }}
+            />
+          }
+        />
+      </Routes>
+    </Router>
   )
 }
 
 export default App
-
-// Styled Components
