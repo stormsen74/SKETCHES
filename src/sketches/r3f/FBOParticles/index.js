@@ -13,7 +13,7 @@ extend({ SimulationMaterial: SimulationMaterial })
 // https://blog.maximeheckel.com/posts/the-magical-world-of-particles-with-react-three-fiber-and-shaders/
 
 const Particles = () => {
-  const size = 64
+  const size = 128
 
   const points = useRef()
   const simulationMaterialRef = useRef()

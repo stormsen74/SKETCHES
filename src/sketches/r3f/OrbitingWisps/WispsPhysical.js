@@ -1,32 +1,9 @@
 import React, { Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { createNoise2D } from 'simplex-noise'
-import { BufferGeometry, DoubleSide, Line, LineBasicMaterial, MathUtils, Vector3 } from 'three'
+import { BufferGeometry, DoubleSide, Line, LineBasicMaterial, Vector3 } from 'three'
 import { useFrame, useThree } from '@react-three/fiber'
 import { BallCollider, Physics, RigidBody } from '@react-three/rapier'
 import Box from './Box.js'
-import { Html } from '@react-three/drei'
-import styled from 'styled-components'
-
-const Label = styled.div`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate3d(-50%, -50%, 0);
-  font-size: 12px;
-  color: #000000;
-  text-align: center;
-  background-color: rgba(91, 91, 91, 0.45);
-  backdrop-filter: blur(5px);
-  border: 1px solid #1c80a4;
-  padding: 10px;
-  min-width: 100px;
-  border-radius: 5px;
-  transform-origin: center center;
-
-  opacity: ${props => (props.visible ? 1 : 0)};
-  scale: ${props => (props.visible ? 1 : 0)};
-  transition: all ${props => (props.visible ? 0.5 : 0.25)}s ease-in-out;
-`
 
 // TODO make DebugLine as component (ts?)
 
@@ -47,20 +24,14 @@ function Wisp({ id, hoverId, setHoverId, color, noise }) {
   const target = useRef()
   const intersect = useRef()
   const castMesh = useRef()
-  const label = useRef()
   const step = (Math.PI * 2) / 4
   const t = useRef(id * step)
-  const linearDamp = useRef(0)
   const [locked, setLocked] = useState(false)
   const [inital, setInitial] = useState(true)
-  const [dynamic, setDynamic] = useState(false)
   const targetPosition = useMemo(() => {
     return new Vector3()
   }, [])
   const bodyPosition = useMemo(() => {
-    return new Vector3()
-  }, [])
-  const labelPosition = useMemo(() => {
     return new Vector3()
   }, [])
   const line = useRef(
@@ -86,8 +57,7 @@ function Wisp({ id, hoverId, setHoverId, color, noise }) {
   useFrame((state, delta) => {
     state.events.update() //continuous raycasting
 
-    // t.current += locked ? 0 : DELTA_T * delta
-    t.current += DELTA_T * delta
+    t.current += locked ? 0 : DELTA_T * delta
 
     targetPosition.x = RADIUS * Math.sin(t.current)
     targetPosition.z = RADIUS * Math.cos(t.current)
@@ -104,30 +74,13 @@ function Wisp({ id, hoverId, setHoverId, color, noise }) {
     const posTarget = target.current.position.clone()
     const posIntersect = intersect.current.position.clone()
 
-    if (locked) {
-      // collider.current.setDensity(!locked ? 0.25 : 1)
-      const dist = bodyPosition.clone().distanceTo(intersect.current.position)
-      linearDamp.current = MathUtils.lerp(linearDamp.current, dist < 0.025 ? 100 : 2, delta * 10)
-      // rigidBody.current?.setLinearDamping(dist < 0.05 ? 100 : 3)
-      // if (dist < 0.05) rigidBody.current?.setLinearDamping(100)
-      rigidBody.current?.setLinearDamping(linearDamp.current)
-    } else {
-      rigidBody.current?.setLinearDamping(1)
-      // linearDamp.current = MathUtils.lerp(linearDamp.current, 1, delta)
-    }
+    //   collider.current.setDensity(0.25)
 
     const dir = locked ? posIntersect.sub(bodyPosition) : posTarget.sub(bodyPosition)
-    dir.normalize().multiplyScalar(!locked ? 0.01 : 0.035)
+    dir.normalize().multiplyScalar(!locked ? 0.01 : 0.05)
     rigidBody.current.applyImpulseAtPoint(dir, bodyPosition, true)
 
     renderDebugLine()
-
-    if (locked) {
-      labelPosition.lerp(bodyPosition.clone().add(new Vector3(0, 1, 0)), delta * 5)
-    } else {
-      labelPosition.lerp(bodyPosition.clone().add(new Vector3(0, 2, 0)), delta * 5)
-    }
-    label.current.position.copy(labelPosition)
 
     // initial rigidBody position!
     if (inital && rigidBody.current && collider.current) {
@@ -142,7 +95,6 @@ function Wisp({ id, hoverId, setHoverId, color, noise }) {
     setHoverId(id)
     setLocked(true)
     intersect.current.position.copy(e.point)
-    // labelPosition.copy(bodyPosition.clone().add(new Vector3(0, 5, 0)))
   }
 
   const handlePointerMove = e => {
@@ -173,9 +125,6 @@ function Wisp({ id, hoverId, setHoverId, color, noise }) {
           scale={hoverId === id || hoverId === 0 ? [1, 1, 1] : [0, 0, 0]}
           ref={castMesh}
           onPointerOver={handlePointerOver}
-          onPointerDown={() => {
-            setDynamic(!dynamic)
-          }}
           onPointerMove={handlePointerMove}
           onPointerLeave={handlePointerLeave}
         >
@@ -189,22 +138,8 @@ function Wisp({ id, hoverId, setHoverId, color, noise }) {
         </mesh>
       </>
 
-      <group ref={label}>
-        <Html
-          zIndexRange={[100, 0]}
-          transform={false}
-          sprite={true}
-          distanceFactor={15}
-          style={{ pointerEvents: 'none' }}
-          center={true}
-        >
-          <Label visible={locked}>{'id: ' + id}</Label>
-        </Html>
-      </group>
-
       <RigidBody
         ref={rigidBody}
-        type={dynamic ? 'dynamic' : 'kinematicPosition'}
         // colliders={'ball'}
         linearDamping={1}
         lockRotations={true}
@@ -238,10 +173,10 @@ export default function WispsPhysical() {
     <>
       <Suspense>
         <Physics debug={false} colliders={false} gravity={[0, 1, 0]} paused={paused}>
-          <Wisp id={1} hoverId={hoverId} setHoverId={setHoverId} color={'#b57104'} noise={noise} />
-          <Wisp id={2} hoverId={hoverId} setHoverId={setHoverId} color={'#b50492'} noise={noise} />
-          <Wisp id={3} hoverId={hoverId} setHoverId={setHoverId} color={'#59abb2'} noise={noise} />
-          <Wisp id={4} hoverId={hoverId} setHoverId={setHoverId} color={'#b29159'} noise={noise} />
+          <Wisp id={0} hoverId={hoverId} setHoverId={setHoverId} color={'#b57104'} noise={noise} />
+          <Wisp id={1} hoverId={hoverId} setHoverId={setHoverId} color={'#b50492'} noise={noise} />
+          <Wisp id={2} hoverId={hoverId} setHoverId={setHoverId} color={'#59abb2'} noise={noise} />
+          <Wisp id={3} hoverId={hoverId} setHoverId={setHoverId} color={'#b29159'} noise={noise} />
           {/*<Box />*/}
         </Physics>
       </Suspense>
