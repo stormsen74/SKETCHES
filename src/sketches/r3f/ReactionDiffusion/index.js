@@ -4,17 +4,20 @@
 
 // https://discourse.threejs.org/t/shader-reaction-diffusion-confined-to-a-specific-shape/58515
 
-import { OrthographicCamera, useFBO } from '@react-three/drei'
+// https://mrob.com/pub/comp/xmorphia/ogl/index.html
+
+import { CameraControls, OrthographicCamera, useFBO } from '@react-three/drei'
 import { Canvas, createPortal, useFrame, useThree } from '@react-three/fiber'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { LinearFilter, NearestFilter, Scene } from 'three'
 import { OffScreenScene } from './OffscreenScene'
 import outFragment from './glsl/out_frag.glsl'
-import vertexShader from './glsl/vert.glsl'
+import vertexShader from './glsl/out_vert.glsl'
+import { useControls } from 'leva'
 
-const RESOLUTION = 4096
+const RESOLUTION = 1024
 
-const Sim = () => {
+const Simulation = () => {
   const { scene, size } = useThree()
   const offScreen = useRef()
   const onScreen = useRef()
@@ -42,20 +45,25 @@ const Sim = () => {
     []
   )
 
+  const { iterationsPerFrame } = useControls({
+    iterationsPerFrame: { value: 10, min: 1, max: 100, step: 1 },
+  })
+
   useFrame(({ gl, camera }) => {
-    gl.setRenderTarget(textureB)
-    gl.render(offScreenScene, offScreenCameraRef.current)
+    for (let i = 0; i < iterationsPerFrame; i++) {
+      gl.setRenderTarget(textureB)
+      gl.render(offScreenScene, offScreenCameraRef.current)
 
-    // Swap textures
-    const t = textureA
-    textureA = textureB
-    textureB = t
+      // Swap textures
+      const t = textureA
+      textureA = textureB
+      textureB = t
 
-    onScreen.current.material.map = textureB.texture
-    offScreen.current.material.uniforms.bufferTexture.value = textureA.texture
+      offScreen.current.material.uniforms.bufferTexture.value = textureA.texture
 
-    gl.setRenderTarget(null)
-    gl.render(scene, camera)
+      gl.setRenderTarget(null)
+      gl.render(scene, camera)
+    }
   })
 
   const onPointerMove = useCallback(e => {
@@ -75,8 +83,6 @@ const Sim = () => {
     <>
       <mesh ref={onScreen} onPointerMove={onPointerMove} onPointerDown={onMouseDown} onPointerUp={onMouseUp}>
         <planeGeometry args={[20, 20]} />
-        {/* <sphereGeometry args={[3]} /> */}
-        {/* <meshBasicMaterial map={onScreenFBOTexture} /> */}
         <shaderMaterial vertexShader={vertexShader} fragmentShader={outFragment} uniforms={uniforms} />
       </mesh>
 
@@ -101,7 +107,7 @@ export default function ReactionDiffusion() {
   return (
     <Canvas>
       {/* <CameraControls /> */}
-      <Sim />
+      <Simulation />
     </Canvas>
   )
 }

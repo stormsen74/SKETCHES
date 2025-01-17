@@ -16,8 +16,8 @@ export default function FakeGodRays() {
 
       {/*<MeshBasedFresnel />*/}
       {/*<MeshBasedGlow />*/}
-      {/*<FakeRays />*/}
-      <BillboardBlades />
+      <FakeRays />
+      {/* <BillboardBlades /> */}
 
       {/*<gridHelper />*/}
     </Canvas>

@@ -28,14 +28,32 @@ void main() {
     baseColor.rgb = mix(mix(vec3(0), vec3(1, 0, 0), 1.0 - baseColor.r), vec3(1, 1, 0), baseColor.g);
     baseColor.rgb = pow(baseColor.rgb, vec3(1. / 2.2));
 
-    vec3 color1 = vec3(0.24);
+    vec3 color1 = vec3(0.0);
     vec3 color2 = vec3(0.82, 0.52, 0.11);
-    vec3 color = mix(color1, color2, min(data.g * 2.0, 1.0));
 
-    float hueShift = 0.0;
+    // vec3 color = data.rgb;
+    // vec3 color = mix(color1, color2, min(data.r * 1.0, 1.0));
+    // vec3 color = mix(color1, color2, min(pow(data.r, 3.0), 1.0));
+
+    float threshold = 0.2; // Adjust threshold for sharpness
+    float intensity = smoothstep(threshold - 0.1, threshold + 0.1, data.g);
+    vec3 remapped = mix(color1, color2, intensity);
+
+    // float remapped = smoothstep(0.5, 0.7, data.r); // Adjust range for contrast
+    // vec3 color = mix(color1, color2, remapped);
+
+// Increase contrast and sharpness
+    // float sharpness = .75;
+    // float remapped = sness = .75;
+    // float remapped = smoothstep(0.3, 0.7, pow(data.r, sharpness));
+
+// Final color with sharp, contrasting lines
+    vec3 color = mix(color1, color2, remapped);
+
+    float hueShift = 180.0;
     vec3 hsv = rgbToHsv(color);
     hsv.x = mod(hsv.x + hueShift / 360.0, 1.0);
     vec3 finalColor = hsvToRgb(hsv);
 
-    gl_FragColor = vec4(finalColor, 1.0);
+    gl_FragColor = vec4(finalColor.rgb, 1.0);
 }
