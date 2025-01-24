@@ -14,6 +14,11 @@ uniform float dA;
 uniform float dB;
 uniform float timestep;
 
+uniform sampler2D styleMapTexture;
+uniform vec2 styleMapResolution;
+uniform vec4 styleMapParameters;
+vec4 styleMapTransforms = vec4(1.0, 0, 0, 0); //scale, rotation, offset x,y
+
 vec2 bias = vec2(0.0, 0.0);
 
 vec3 weights[3];
@@ -60,20 +65,62 @@ vec2 getLaplacian(vec4 centerTexel) {
   return laplacian;
 }
 
+vec4 getStyleMapTexel(vec2 uv) {
+  vec4 texel = vec4(- 1.0, - 1.0, - 1.0, - 1.0);
+
+  float scale = styleMapTransforms[0];
+  float angle = styleMapTransforms[1];
+  float xOffset = - styleMapTransforms[2] / res.x;
+  float yOffset = styleMapTransforms[3] / res.y;
+
+  vec2 transformedUV = uv;
+
+  // Calculate translation (X and Y)
+  transformedUV.x += xOffset;
+  transformedUV.y += yOffset;
+
+  // Calculate scale
+  transformedUV /= scale;
+
+  // Calculate rotation
+  float s = sin(angle);
+  float c = cos(angle);
+  mat2 rotationMatrix = mat2(c, s, - s, c);
+  vec2 pivot = vec2(0.5, 0.5);
+  transformedUV = rotationMatrix * (transformedUV - pivot) + pivot;
+
+  texel = texture2D(styleMapTexture, transformedUV);
+
+  return texel;
+}
+
 void main() {
     // vec2 uv = vUv;
     // vec4 fragColour = texture2D(bufferTexture, uv);
 
      // Get A/B chemical data
   vec4 centerTexel = texture2D(bufferTexture, v_uvs[0]);
-  float A = centerTexel[0];
-  float B = centerTexel[1];
+
+  float A = centerTexel.r;
+  float B = centerTexel.g;
 
      // Copy the f/k/dA/dB parameters so they can be modified locally ("n" for "new")
   float nf = f;
   float nk = k;
   float ndA = dA;
   float ndB = dB;
+
+   // If a style map image is set, smoothly interpolate between the main f/k/dA/dB and the f/k/dA/dB values set in the Style Map pane
+  if(styleMapResolution != vec2(- 1.0, - 1.0)) {
+    // Get the style map texel that corresponds with this location
+    vec4 styleMapTexel = getStyleMapTexel(v_uvs[0]);
+
+    float luminance = 0.3 * styleMapTexel.r + 0.59 * styleMapTexel.g + 0.11 * styleMapTexel.b;
+    nf = mix(f, styleMapParameters[0], luminance);
+    nk = mix(k, styleMapParameters[1], luminance);
+    ndA = mix(dA, styleMapParameters[2], luminance);
+    ndB = mix(dB, styleMapParameters[3], luminance);
+  }
 
     // Draw more of the B chemical around the mouse on mouse down
   if(mouse.z > 0.0) {

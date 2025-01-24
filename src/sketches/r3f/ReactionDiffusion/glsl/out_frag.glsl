@@ -55,5 +55,5 @@ void main() {
     hsv.x = mod(hsv.x + hueShift / 360.0, 1.0);
     vec3 finalColor = hsvToRgb(hsv);
 
-    gl_FragColor = vec4(finalColor.rgb, 1.0);
+    gl_FragColor = vec4(color.rgb, 1.0);
 }

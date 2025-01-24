@@ -4,23 +4,35 @@
 
 // https://discourse.threejs.org/t/shader-reaction-diffusion-confined-to-a-specific-shape/58515
 
+// https://jasonwebb.github.io/reaction-diffusion-playground/
+
 // https://mrob.com/pub/comp/xmorphia/ogl/index.html
+
+// https://www.shadertoy.com/view/WlSGzy
+
+// Todos:
+// ° Make resizeable
+// ° Add methods for clearing and fill with patterns
 
 import { CameraControls, OrthographicCamera, useFBO } from '@react-three/drei'
 import { Canvas, createPortal, useFrame, useThree } from '@react-three/fiber'
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { LinearFilter, NearestFilter, Scene } from 'three'
 import { OffScreenScene } from './OffscreenScene'
+import { TweakpaneProvider, useTweakpane } from './TweakpaneProvider'
 import outFragment from './glsl/out_frag.glsl'
 import vertexShader from './glsl/out_vert.glsl'
-import { useControls } from 'leva'
 
 const RESOLUTION = 1024
 
 const Simulation = () => {
+  const pane = useTweakpane()
   const { scene, size } = useThree()
   const offScreen = useRef()
   const onScreen = useRef()
+  const PARAMS = useRef({
+    iterPerStep: 10,
+  })
 
   const offScreenFBOTexture = useFBO(RESOLUTION, RESOLUTION, {
     minFilter: LinearFilter,
@@ -45,25 +57,26 @@ const Simulation = () => {
     []
   )
 
-  const { iterationsPerFrame } = useControls({
-    iterationsPerFrame: { value: 10, min: 1, max: 100, step: 1 },
-  })
+  useEffect(() => {
+    const folder = pane.addFolder({ title: 'Simulation' })
+    folder.addBinding(PARAMS.current, 'iterPerStep', { min: 1, max: 100, step: 1 })
+  }, [pane])
 
   useFrame(({ gl, camera }) => {
-    for (let i = 0; i < iterationsPerFrame; i++) {
+    for (let i = 0; i < PARAMS.current.iterPerStep; i++) {
       gl.setRenderTarget(textureB)
       gl.render(offScreenScene, offScreenCameraRef.current)
 
       // Swap textures
-      const t = textureA
+      const _temp = textureA
       textureA = textureB
-      textureB = t
+      textureB = _temp
 
       offScreen.current.material.uniforms.bufferTexture.value = textureA.texture
-
-      gl.setRenderTarget(null)
-      gl.render(scene, camera)
     }
+
+    gl.setRenderTarget(null)
+    gl.render(scene, camera)
   })
 
   const onPointerMove = useCallback(e => {
@@ -105,9 +118,11 @@ const Simulation = () => {
 
 export default function ReactionDiffusion() {
   return (
-    <Canvas>
-      {/* <CameraControls /> */}
-      <Simulation />
-    </Canvas>
+    <TweakpaneProvider>
+      <Canvas camera={{ fov: 35, position: [0, 0, 20] }}>
+        {/* <CameraControls /> */}
+        <Simulation />
+      </Canvas>
+    </TweakpaneProvider>
   )
 }

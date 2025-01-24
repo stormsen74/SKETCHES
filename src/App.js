@@ -3,10 +3,6 @@
 // // ~ isolines
 // // https://github.com/winkerVSbecks/sketchbook/blob/master/basic-noise.js
 
-// // Reaction diffusion
-// // https://codepen.io/forerunrun/pen/poONERw
-// // https://www.shadertoy.com/view/WlSGzy
-
 // Updated App.js with dynamic routing for R3F sketches
 import React from 'react'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
