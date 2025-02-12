@@ -4,15 +4,18 @@ import { CanvasTexture, TextureLoader, Vector2, Vector3, Vector4 } from 'three'
 import simulationFrag from './glsl/simulationFrag.glsl'
 import simulationVert from './glsl/simulationVert.glsl'
 
-// import styleMapImage from './assets/black-circle.png'
-import styleMapImage from './assets/reaction-diffusion-text.jpg'
+import black from './assets/black.png'
+import styleMapImage from './assets/testPattern.png'
+// import styleMapImage from './assets/reaction-diffusion-text.jpg'
 import { useTweakpane } from './TweakpaneProvider'
 import { presets } from './presets'
 
 export const OffScreenScene = forwardRef((props, ref) => {
   const { size } = useThree()
 
-  const [styleMapImageTexture] = useLoader(TextureLoader, [styleMapImage])
+  const [styleMapImageTexture, blackTexture] = useLoader(TextureLoader, [styleMapImage, black])
+
+  console.log(blackTexture)
 
   const pane = useTweakpane()
 
@@ -28,6 +31,7 @@ export const OffScreenScene = forwardRef((props, ref) => {
     timestep: 1.0,
     brushRadius: 10.0,
     preset: 'Dfault',
+    useStyleMap: true,
   })
 
   const sim_uniforms = useMemo(
@@ -38,6 +42,7 @@ export const OffScreenScene = forwardRef((props, ref) => {
       k: { value: PARAMS.current.kill },
       dA: { value: PARAMS.current.dA },
       dB: { value: PARAMS.current.dB },
+      useStyleMap: { value: 1 },
       styleMapTexture: { value: styleMapImageTexture },
       styleMapResolution: { value: new Vector2(props.res, props.res) },
       styleMapParameters: {
@@ -60,6 +65,8 @@ export const OffScreenScene = forwardRef((props, ref) => {
     pane.addBinding({ preset: '-' }, 'preset', { options: presetOptions }).on('change', e => {
       const selectedPreset = presets[e.value]
 
+      console.log(selectedPreset)
+
       PARAMS.current.feed = selectedPreset.feed
       PARAMS.current.kill = selectedPreset.kill
 
@@ -73,6 +80,15 @@ export const OffScreenScene = forwardRef((props, ref) => {
     })
     pane.addBinding(PARAMS.current, 'timestep', { min: 0, max: 2, step: 0.01 }).on('change', e => {
       ref.current.material.uniforms.timestep.value = e.value
+    })
+
+    pane.addBinding(PARAMS.current, 'useStyleMap').on('change', e => {
+      ref.current.material.uniforms.useStyleMap.value = e.value ? 1.0 : 0.0
+    })
+
+    pane.addButton({ title: 'clear' }).on('click', () => {
+      console.log('#c')
+      ref.current.material.uniforms.bufferTexture.value = blackTexture
     })
 
     const folderA = pane.addFolder({ title: 'Base Params' })

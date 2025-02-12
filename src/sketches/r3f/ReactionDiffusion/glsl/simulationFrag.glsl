@@ -1,4 +1,4 @@
-precision highp float;
+precision mediump float;
 
 uniform vec2 res; // Resolution
 uniform sampler2D bufferTexture; // Input texture
@@ -14,6 +14,7 @@ uniform float dA;
 uniform float dB;
 uniform float timestep;
 
+uniform int useStyleMap;
 uniform sampler2D styleMapTexture;
 uniform vec2 styleMapResolution;
 uniform vec4 styleMapParameters;
@@ -111,7 +112,7 @@ void main() {
   float ndB = dB;
 
    // If a style map image is set, smoothly interpolate between the main f/k/dA/dB and the f/k/dA/dB values set in the Style Map pane
-  if(styleMapResolution != vec2(- 1.0, - 1.0)) {
+  if(useStyleMap > 0) {
     // Get the style map texel that corresponds with this location
     vec4 styleMapTexel = getStyleMapTexel(v_uvs[0]);
 

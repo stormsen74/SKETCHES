@@ -28,13 +28,10 @@ import OrbitingWisps from '@src/sketches/r3f/OrbitingWisps/index.js'
 import Postprocessing from '@src/sketches/r3f/Postprocessing/index.js'
 import ReactionDiffusion from './r3f/ReactionDiffusion/index.js'
 import PerlinFlow from './r3f/PerlinFlowShader/index.js'
-import ReactionDiffusionCanvas from './p5/ReactP5_Setup/ReactionDiffusion/index.js'
 import ReactP5_Setup from './p5/ReactP5_Setup/Setup/index.js'
-// import GPGPUCurlNoise from './r3f/GPGPUCurlNoise'
 
 export const sketches = [
   { component: <ReactP5_Setup />, name: 'ReactP5 Setup', type: 'p5' },
-  { component: <ReactionDiffusionCanvas />, name: 'ReactionDiffusion Canvas', type: 'p5' },
   { component: <R3RapierSetup />, name: 'R3 Rapier Setup', type: 'r3f' },
   { component: <DreiSampler />, name: 'Drei Sampler', type: 'r3f' },
   { component: <IChing />, name: 'I Ching', type: 'r3f' },
@@ -64,5 +61,4 @@ export const sketches = [
   { component: <FBOParticles />, name: 'FBO Particles', type: 'r3f' },
   { component: <PerlinFlow />, name: 'Perlin Flow', type: 'r3f' },
   { component: <ReactionDiffusion />, name: 'ReactionDiffusion', type: 'r3f' },
-  // { component: <GPGPUCurlNoise />, name: 'GPGPUCurlNoise', type: 'r3f' },
 ]

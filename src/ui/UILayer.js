@@ -100,9 +100,8 @@ export default function UILayer({ sketches, sketch, handleSelectSketch }) {
 
   return (
     <>
-      <ToggleButton onClick={toggleVisibility}>{visible ? 'Hide UI' : 'Show UI'}</ToggleButton>
+      {/* <ToggleButton onClick={toggleVisibility}>{visible ? 'Hide UI' : 'Show UI'}</ToggleButton> */}
       <Container $visible={visible}>
-        <Title>Select a Sketch</Title>
         <Selector>
           {sketches.map((item, index) => (
             // <SketchButton key={index} onClick={() => handleSelectSketch(item.component)}>

@@ -7,11 +7,13 @@ export const presets = {
   'Fungal': { feed: 0.031, kill: 0.058 },
   'Angle Sprouts': { feed: 0.025, kill: 0.055 },
   'Smooth Arcs': { feed: 0.024, kill: 0.036 },
-  'Spirals': { feed: 0.048, kill: 0.036 },
+  // 'Spirals': { feed: 0.048, kill: 0.036 },
   'Cycling Spirals': { feed: 0.012, kill: 0.039 },
   'Spiral Puffs': { feed: 0.015, kill: 0.048 },
   'Constant Growth': { feed: 0.021, kill: 0.0539 },
   'Very Active': { feed: 0.02, kill: 0.0509 },
+  // 'Spiral Dance': { feed: 0.0487, kill: 0.0111 },
+  'Coral Growth': { feed: 0.0545, kill: 0.062 },
 }
 
 //    vec2 feedKill = vec2(uv.x*uv.y,uv.y)*vec2(.02,.06); // smoke waves

@@ -73,10 +73,10 @@ const Simulation = () => {
       textureB = _temp
 
       offScreen.current.material.uniforms.bufferTexture.value = textureA.texture
-    }
 
-    gl.setRenderTarget(null)
-    gl.render(scene, camera)
+      gl.setRenderTarget(null)
+      gl.render(scene, camera)
+    }
   })
 
   const onPointerMove = useCallback(e => {
@@ -119,7 +119,7 @@ const Simulation = () => {
 export default function ReactionDiffusion() {
   return (
     <TweakpaneProvider>
-      <Canvas camera={{ fov: 35, position: [0, 0, 20] }}>
+      <Canvas camera={{ fov: 35, position: [0, 0, 30] }}>
         {/* <CameraControls /> */}
         <Simulation />
       </Canvas>
